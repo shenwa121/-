@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>暗黑人格测试 · 人性博弈</title>
+    <!-- 引入 Font Awesome 图标库 (v6 免费版) 用于神秘感配图 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #0b0505;
+            background-image: radial-gradient(circle at 10% 20%, #2a0f0f 0%, #000000 90%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(15, 5, 5, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid #4a1f1f;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 15px #66000055;
+            padding: 28px 22px;
+            color: #f0d5d5;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px #b30000, 0 2px 0 #1a0000;
+            color: #ffc5c5;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        h1 i {
+            font-size: 2rem;
+            color: #b30000;
+            filter: drop-shadow(0 0 6px #ff5555);
+        }
+
+        .sub {
+            text-align: center;
+            font-size: 1rem;
+            color: #b48080;
+            border-bottom: 1px dashed #6b2f2f;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .sub i {
+            color: #a10000;
+        }
+
+        /* 测试题目区域 */
+        .test-section {
+            transition: opacity 0.3s;
+        }
+
+        .question {
+            background: rgba(41, 12, 12, 0.7);
+            border-left: 5px solid #990000;
+            border-radius: 20px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 5px 0 #330000;
+            backdrop-filter: blur(2px);
+        }
+
+        .q-title {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffd9d9;
+        }
+        .q-title i {
+            color: #cc3333;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 25px;
+            padding-left: 8px;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.98rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 16px 6px 10px;
+            border-radius: 40px;
+            border: 1px solid #632626;
+            transition: 0.15s;
+        }
+        .option-item:hover {
+            background: #3f1515;
+            border-color: #b33b3b;
+        }
+        input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #8b4b4b;
+            border-radius: 50%;
+            background: #1e0909;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        input[type="radio"]:checked {
+            background: #cc0000;
+            border-color: #ff8888;
+            box-shadow: 0 0 12px #ff0000;
+        }
+        .option-item span {
+            color: #f0bcbc;
+        }
+
+        /* 按钮区 */
+        .action-btn {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0 15px;
+        }
+        .btn-primary {
+            background: #500000;
+            border: none;
+            border-bottom: 5px solid #1f0000;
+            color: #ffe3e3;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 16px 40px;
+            border-radius: 60px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #2b0000, 0 10px 30px #a10000;
+            transition: 0.07s linear;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-primary:active {
+            transform: translateY(6px);
+            border-bottom-width: 2px;
+            box-shadow: 0 2px 0 #2b0000, 0 5px 20px #a10000;
+        }
+        .btn-primary i {
+            font-size: 1.7rem;
+        }
+
+        /* 结果区域 默认隐藏 */
+        .result-section {
+            display: none;
+            animation: fadeIn 0.8s;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .result-card {
+            background: #180b0b;
+            border: 2px solid #7a2626;
+            border-radius: 40px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: inset 0 0 30px #2f0000, 0 10px 20px black;
+            margin-top: 15px;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            text-shadow: 0 0 25px red;
+            margin-bottom: 5px;
+        }
+
+        .score-display {
+            font-size: 2rem;
+            background: #2f0a0a;
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 60px;
+            border: 1px solid #b35959;
+            margin: 15px 0 10px;
+            font-weight: 800;
+            color: #ffbaba;
+        }
+
+        .result-type {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #d13c3c;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 0 #3b0000;
+        }
+
+        .result-desc {
+            font-size: 1.1rem;
+            line-height: 1.65;
+            color: #e2c1c1;
+            background: #201010b8;
+            padding: 20px;
+            border-radius: 30px;
+            text-align: left;
+            border: 1px solid #9f4c4c;
+            box-shadow: inset 0 0 10px #410000;
+            margin: 20px 0;
+        }
+
+        .result-desc i {
+            color: #c08080;
+            margin-right: 8px;
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: 2px solid #a34848;
+            color: #ffc6c6;
+            font-size: 1.3rem;
+            padding: 14px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            margin: 20px auto 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .btn-reset:hover {
+            background: #511c1c;
+            border-color: #ff6a6a;
+        }
+
+        .footer-note {
+            margin-top: 15px;
+            color: #6b4040;
+            font-size: 0.8rem;
+            text-align: center;
+            border-top: 1px dashed #5f2e2e;
+            padding-top: 15px;
+        }
+        .footer-note i {
+            color: #a53f3f;
+        }
+
+        /* 提示语 */
+        .warning-tip {
+            color: #ff7b7b;
+            background: #2f0a0a;
+            border-radius: 30px;
+            padding: 10px;
+            text-align: center;
+            margin-top: 15px;
+            border: 1px solid #9f4c4c;
+            font-size: 0.95rem;
+        }
+        .warning-tip i {
+            margin-right: 8px;
+        }
+
+        /* 重新测试标签（也放在底部） */
+        .reset-label {
+            display: block;
+            text-align: center;
+            margin: 15px 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>
+            <i class="fas fa-skull"></i> 暗黑指数 · 人性博弈 <i class="fas fa-mask"></i>
+        </h1>
+        <div class="sub">
+            <i class="fas fa-ghost"></i> 15题揭晓你内心隐藏的魔鬼 <i class="fas fa-ghost"></i>
+        </div>
+
+        <!-- 测试部分（默认显示） -->
+        <div id="testSection" class="test-section">
+            <form id="quizForm">
+                <!-- 题目将通过JS动态生成，便于维护。但也可以直接静态写，这里用JS动态生成以保证准确性，但为了更直观，我采用混合：静态HTML+JS取值？为减少错误，直接在HTML里输出全部题目，但为了让你能直接复制使用，我会把15题都硬编码。不过因为数量多，我采用JS动态生成，同时保证题目列表正确。这样代码更简洁，也方便你以后改题目。 -->
+                <!-- 但动态生成需要把题目数据存在JS里。也可以用静态，但考虑到篇幅，我选择JS动态渲染。这样也更清晰。 -->
+            </form>
+            <div class="action-btn">
+                <button class="btn-primary" id="revealBtn"><i class="fa-solid fa-eye"></i> 揭示暗黑指数 <i class="fa-solid fa-eye-low-vision"></i></button>
+            </div>
+            <div id="warningMsg" class="warning-tip" style="display: none;">
+                <i class="fa-solid fa-triangle-exclamation"></i> 请回答全部15道题，才能窥见你的暗黑面。
+            </div>
+        </div>
+
+        <!-- 结果部分（初始隐藏） -->
+        <div id="resultSection" class="result-section">
+            <div class="result-card" id="resultCard">
+                <!-- 结果动态填充 -->
+            </div>
+            <!-- 重新测试标签（按钮） -->
+            <div class="reset-label">
+                <button class="btn-reset" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> 重新测试 <i class="fa-solid fa-rotate-left"></i></button>
+            </div>
+        </div>
+
+        <!-- 底部装饰 -->
+        <div class="footer-note">
+            <i class="fa-regular fa-moon"></i> 黑暗中，你凝视深渊 · 深渊也在凝视你 <i class="fa-regular fa-moon"></i>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 题目数据（15题，完全按照之前的对话）-----------
+            const questions = [
+                {
+                    text: "朋友跟你吐槽TA的另一个朋友，你会？",
+                    options: ["A. 耐心倾听，但不多嘴评价", "B. 顺着TA的话附和几句", "C. 趁机挑拨，让TA俩关系更糟"]
+                },
+                {
+                    text: "看到同事犯错被老板骂，你第一反应是？",
+                    options: ["A. 有点同情，想帮ta圆场", "B. 默默看戏，不关我事", "C. 心里暗爽：活该"]
+                },
+                {
+                    text: "你发现伴侣的手机没锁，这时你会？",
+                    options: ["A. 直接递给他/她，提醒锁屏", "B. 犹豫一下，但不看", "C. 偷偷翻一遍，看有没有猫腻"]
+                },
+                {
+                    text: "有人在你背后说你坏话，被你知道了，你会？",
+                    options: ["A. 算了，当没发生", "B. 找ta当面问清楚", "C. 找机会整回去，让ta吃哑巴亏"]
+                },
+                {
+                    text: "你更认同下面哪句话？",
+                    options: ["A. 做人留一线，日后好相见", "B. 人不犯我我不犯人", "C. 成大事者不拘小节（包括道德）"]
+                },
+                {
+                    text: "看到网上两个人吵架，你会？",
+                    options: ["A. 划走，不感兴趣", "B. 理性分析谁对谁错", "C. 评论区煽风点火：“打起来打起来”"]
+                },
+                {
+                    text: "朋友过得比你好，你的真实感受是？",
+                    options: ["A. 真心为ta高兴", "B. 有点酸，但能调节", "C. 凭什么？ta不配"]
+                },
+                {
+                    text: "你有没有想过利用别人的秘密来达到自己的目的？",
+                    options: ["A. 从没想过", "B. 想过，但不会做", "C. 做过，而且挺有效"]
+                },
+                {
+                    text: "看到路上有人摔倒，你的第一反应是？",
+                    options: ["A. 赶紧去扶", "B. 看情况，如果很多人扶我就去", "C. 假装没看见，绕道走"]
+                },
+                {
+                    text: "你觉得“为达目的不择手段”这句话？",
+                    options: ["A. 完全错误", "B. 分情况，小事可以，大事不行", "C. 人间真理"]
+                },
+                {
+                    text: "你能面不改色地说谎吗？",
+                    options: ["A. 不能，一说谎就脸红", "B. 偶尔能，但事后会愧疚", "C. 能，说谎跟喝水一样自然"]
+                },
+                {
+                    text: "看到别人出丑（比如当众摔跤），你会？",
+                    options: ["A. 替ta尴尬", "B. 想笑但忍住", "C. 笑出声，还拍视频"]
+                },
+                {
+                    text: "你有没有想过让某个人“消失”在你的生活里？",
+                    options: ["A. 从没有", "B. 吵架时闪过念头", "C. 认真谋划过"]
+                },
+                {
+                    text: "你和朋友竞争同一个晋升机会，你会？",
+                    options: ["A. 公平竞争，靠实力说话", "B. 稍微表现积极一点", "C. 暗地里给ta使绊子"]
+                },
+                {
+                    text: "你在森林里迷路了，天色渐暗，这时看到前方有一个木屋，你会？",
+                    options: ["A. 敲门问问能不能借宿", "B. 绕屋子观察一圈再做决定", "C. 偷偷溜进去看看有什么值钱的"]
+                }
+            ];
+
+            // ---------- 结果解析（详细、画面感）-----------
+            const resultProfiles = [
+                {
+                    min: 15,
+                    max: 22,
+                    type: "小天使型",
+                    icon: "😇",
+                    desc: "你的内心住着一个纯净的小孩，像月光下的白鸽，连阴影都透着柔软。虽然知道世界有阴暗面，但你选择用善意去拥抱它。你不屑于耍手段，也不喜欢勾心斗角。别人算计利益时，你在心疼路边流浪猫。但注意：黑暗里不仅有飞蛾，也有蛰伏的蛇。善良要有锋芒，别让无底线的温柔成为别人刺向你的刀。"
+                },
+                {
+                    min: 23,
+                    max: 30,
+                    type: "灰色型",
+                    icon: "😐🌫️",
+                    desc: "你是一个“有原则的普通人”，像黄昏时的影子——既不明亮，也不全黑。偶尔会有小私心、小嫉妒，但基本能守住底线。你不会主动害人，但如果别人欺负你，你也会还手，甚至悄悄踢一脚。你的信条是：人不犯我我不犯人。但午夜梦回，那个想报复的念头偶尔会冒出来。你在灰色地带游走，幸好心底还亮着一盏小橘灯。"
+                },
+                {
+                    min: 31,
+                    max: 38,
+                    type: "心机型",
+                    icon: "🎭",
+                    desc: "你很聪明，像暗夜里的蜘蛛，精准织网，耐心等待。你擅长看透人心，知道什么时候该说什么话，也懂得利用规则为自己谋利。你相信人性本私，因此很难真正信任别人——哪怕是枕边人，你也留着三分警觉。你的优势是适合做谈判者、策略师，但小心，权谋用多了，人心会结冰。别让身边的人都变成怕光的影子。"
+                },
+                {
+                    min: 39,
+                    max: 45,
+                    type: "暗黑系",
+                    icon: "👿🔥",
+                    desc: "你的内心住着一个真正的恶魔，喜欢闻血腥的玫瑰。你有极强的报复心，面不改色地说谎，为了目的可以不择手段。你不容易被道德束缚，甚至享受操控局面的快感。别人恐惧时你兴奋，别人流泪时你冷笑。但力量本身不是错，错的是用它吞噬自己。真正的强者，是能勒住内心野兽的人。别让黑暗彻底淹没你，偶尔也要看看月光。"
+                }
+            ];
+
+            // ---------- 渲染测试表单 ----------
+            const testSection = document.getElementById('testSection');
+            const quizForm = document.getElementById('quizForm');
+            function renderQuestions() {
+                let html = '';
+                questions.forEach((q, index) => {
+                    const qNumber = index + 1;
+                    html += `<div class="question" data-q="${qNumber}">`;
+                    html += `<div class="q-title"><i class="fa-regular fa-circle-question"></i> ${qNumber}. ${q.text}</div>`;
+                    html += `<div class="options">`;
+                    // 每个选项，value分别为1,2,3
+                    q.options.forEach((opt, optIndex) => {
+                        const val = optIndex + 1; // A->1, B->2, C->3
+                        html += `<label class="option-item">`;
+                        html += `<input type="radio" name="q${index}" value="${val}" required>`;
+                        html += `<span>${opt}</span>`;
+                        html += `</label>`;
+                    });
+                    html += `</div></div>`;
+                });
+                quizForm.innerHTML = html;
+            }
+            renderQuestions();
+
+            // ---------- 获取所有radio组的name列表 ----------
+            const radioNames = [];
+            for (let i = 0; i < questions.length; i++) {
+                radioNames.push(`q${i}`);
+            }
+
+            // ---------- 元素 ----------
+            const revealBtn = document.getElementById('revealBtn');
+            const warningMsg = document.getElementById('warningMsg');
+            const resultSection = document.getElementById('resultSection');
+            const resultCard = document.getElementById('resultCard');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // ---------- 揭示结果 ----------
+            revealBtn.addEventListener('click', function() {
+                // 检查所有题目是否已选
+                let allSelected = true;
+                for (let name of radioNames) {
+                    const radios = document.getElementsByName(name);
+                    const checked = Array.from(radios).some(r => r.checked);
+                    if (!checked) {
+                        allSelected = false;
+                        break;
+                    }
+                }
+
+                if (!allSelected) {
+                    warningMsg.style.display = 'block';
+                    return;
+                } else {
+                    warningMsg.style.display = 'none';
+                }
+
+                // 计算总分
+                let totalScore = 0;
+                for (let name of radioNames) {
+                    const radios = document.getElementsByName(name);
+                    const selected = Array.from(radios).find(r => r.checked);
+                    if (selected) {
+                        totalScore += parseInt(selected.value, 10);
+                    }
+                }
+
+                // 确定结果类型
+                let profile = resultProfiles.find(p => totalScore >= p.min && totalScore <= p.max);
+                if (!profile) {
+                    // 边界防御，默认取最近
+                    if (totalScore < 15) profile = resultProfiles[0];
+                    else profile = resultProfiles[resultProfiles.length - 1];
+                }
+
+                // 渲染结果卡片
+                let resultHtml = `
+                    <div class="result-icon">${profile.icon}</div>
+                    <div class="score-display">暗黑指数 · ${totalScore}</div>
+                    <div class="result-type">${profile.type}</div>
+                    <div class="result-desc"><i class="fa-solid fa-quote-left"></i> ${profile.desc}</div>
+                `;
+                // 可增加配图小元素 (Font Awesome已有很多)
+                resultCard.innerHTML = resultHtml;
+
+                // 切换显示
+                testSection.style.display = 'none';
+                resultSection.style.display = 'block';
+            });
+
+            // ---------- 重新测试 ----------
+            function resetTest() {
+                // 清空所有radio
+                for (let name of radioNames) {
+                    const radios = document.getElementsByName(name);
+                    radios.forEach(r => r.checked = false);
+                }
+                // 隐藏结果区，显示测试区
+                resultSection.style.display = 'none';
+                testSection.style.display = 'block';
+                warningMsg.style.display = 'none'; // 隐藏警告
+            }
+
+            resetBtn.addEventListener('click', resetTest);
+
+            // 额外重置：如果用户想从头再来，也可点底部重新测试（已经在结果区）
+            // 同时，为了防止bug，初始化时确保测试显示
+            window.onload = function() {
+                // 确保初始显示正确
+                testSection.style.display = 'block';
+                resultSection.style.display = 'none';
+            };
+
+            // 附加：为所有选项添加一个柔和的变化（不需要额外操作）
+        })();
+    </script>
+</body>
+</html>
